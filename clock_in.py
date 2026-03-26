@@ -60,8 +60,6 @@ def clock_in():
         }
     )
     response.raise_for_status()
-    print(response.json())
-    print("Cookies tras login:", dict(session.cookies))
 
     data = response.json()
 
@@ -80,6 +78,8 @@ def main():
         # ── 1. Logs in ─────────────────────────
         login()
         print("Successfully logged in.")
+
+        time.sleep(DELAY_BETWEEN_REQUESTS)
         # ── 2. Clocks in ─────────────────────────
         clock_in()
         print("Successfully clocked in.")
