@@ -2,7 +2,7 @@
 
 ![Platform](https://img.shields.io/badge/platform-macOS%20%7C%20Linux-blue)
 ![Python](https://img.shields.io/badge/python-3.14-blue?logo=python)
-![License](https://img.shields.io/badge/license-AGPLv3-blue)
+![License](https://img.shields.io/badge/license-MIT-blue)
 ![Requirements](https://img.shields.io/badge/dependencies-pip--requirements-blue)
 
 A Python script that automatically clocks you in on [TimeButler](https://timebutler.de) at login — once per day.
@@ -21,7 +21,7 @@ A Python script that automatically clocks you in on [TimeButler](https://timebut
 ## 📁 Project Structure
 
 ```
-AutoStart-TimeButler/
+timebutler-autoclock-in/
 ├── clock_in.py       # Main script
 ├── .env              # Credentials (not committed)
 ├── .env.example      # Template for .env
@@ -98,9 +98,9 @@ Please open an issue if you find any problems or unexpected behavior.
 
 ## 📜 License
 
-This project is licensed under the **GNU Affero General Public License v3.0 (AGPL-3.0)**.
+This project is licensed under the **MIT License** — free to use, modify, and distribute with attribution.
 
-📄 [Read the full license](https://www.gnu.org/licenses/agpl-3.0.html)
+📄 [Read the full license](./LICENSE)
 
 ---
 
