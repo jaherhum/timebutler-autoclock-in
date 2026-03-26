@@ -21,7 +21,7 @@ A Python script that automatically clocks you in on [TimeButler](https://timebut
 ## 📁 Project Structure
 
 ```
-AutoStart-TimeButler/
+timebutler-autoclock-in/
 ├── clock_in.py       # Main script
 ├── .env              # Credentials (not committed)
 ├── .env.example      # Template for .env
