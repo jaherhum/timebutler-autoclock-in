@@ -78,7 +78,6 @@ def main():
         # ── 1. Logs in ─────────────────────────
         login()
         print("Successfully logged in.")
-
         time.sleep(DELAY_BETWEEN_REQUESTS)
         # ── 2. Clocks in ─────────────────────────
         clock_in()
