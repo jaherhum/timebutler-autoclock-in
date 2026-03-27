@@ -23,7 +23,6 @@ DELAY_BETWEEN_REQUESTS = float(os.getenv("DELAY_BETWEEN_REQUESTS", "0.3"))
 
 def login():
     """Logs into Timebutler."""
-    print("Logging into Timebutler...")
     response = session.get(
         "https://app.timebutler.com/do",
         params={
@@ -35,6 +34,10 @@ def login():
             "keeplogin": 1,
         }
     )
+    response.raise_for_status()
+
+    if "pp" not in session.cookies:
+        raise RuntimeError("Login failed: wrong credentials.")
 
 
 def clock_in():
@@ -74,6 +77,7 @@ def main():
             sys.exit(0)
 
         # ── 1. Logs in ─────────────────────────
+        print("Logging into Timebutler...")
         login()
         print("Successfully logged in.")
         time.sleep(DELAY_BETWEEN_REQUESTS)
