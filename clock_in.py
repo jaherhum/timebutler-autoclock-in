@@ -23,7 +23,6 @@ DELAY_BETWEEN_REQUESTS = float(os.getenv("DELAY_BETWEEN_REQUESTS", "0.3"))
 
 def login():
     """Logs into Timebutler."""
-    print("Logging into Timebutler...")
     response = session.get(
         "https://app.timebutler.com/do",
         params={
@@ -74,6 +73,7 @@ def main():
             sys.exit(0)
 
         # ── 1. Logs in ─────────────────────────
+        print("Logging into Timebutler...")
         login()
         print("Successfully logged in.")
         time.sleep(DELAY_BETWEEN_REQUESTS)
