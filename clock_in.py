@@ -9,16 +9,6 @@ import time
 from pathlib import Path
 from datetime import date
 
-# Only executes this script once a day.
-STAMP = Path(__file__).parent / ".last_run"
-
-today = str(date.today())
-if STAMP.exists() and STAMP.read_text().strip() == today:
-    exit(0)
-
-STAMP.write_text(today)
-
-
 load_dotenv()
 session = requests.Session()
 
@@ -75,6 +65,14 @@ def main():
         raise ValueError("USER_PASSWORD must be set.")
 
     try:
+
+        # ── 1. Checks if the script has run before today. ─────────────────────────
+        STAMP = Path(__file__).parent / ".last_run"
+
+        today = str(date.today())
+        if STAMP.exists() and STAMP.read_text().strip() == today:
+            sys.exit(0)
+
         # ── 1. Logs in ─────────────────────────
         login()
         print("Successfully logged in.")
@@ -82,6 +80,10 @@ def main():
         # ── 2. Clocks in ─────────────────────────
         clock_in()
         print("Successfully clocked in.")
+
+        # ── Creates a file with today's date to avoid re-clocking in. ─────────────────────────
+        STAMP.write_text(today)
+
     except RuntimeError as e:
         print(f"Error: {e}")
     except requests.HTTPError as e:
