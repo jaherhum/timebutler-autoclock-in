@@ -1,3 +1,12 @@
+#!/usr/bin/env -S uv run
+# /// script
+# requires-python = ">=3.11"
+# dependencies = [
+#   "requests",
+#   "python-dotenv",
+# ]
+# ///
+
 """
 Auto clock-in script for Timebutler.
 """
