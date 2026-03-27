@@ -34,6 +34,10 @@ def login():
             "keeplogin": 1,
         }
     )
+    response.raise_for_status()
+
+    if "pp" not in session.cookies:
+        raise RuntimeError("Login failed: wrong credentials.")
 
 
 def clock_in():
