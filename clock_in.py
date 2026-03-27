@@ -25,15 +25,16 @@ session = requests.Session()
 #  CONFIGURATION
 # ─────────────────────────────────────────────
 
-BASE_URL = os.getenv("BASE_URL", "https://app.timebutler.com/")
+BASE_URL = os.getenv("BASE_URL", "https://app.timebutler.com")
 USER_EMAIL = os.getenv("USER_EMAIL", "")
 USER_PASSWORD = os.getenv("USER_PASSWORD", "")
 DELAY_BETWEEN_REQUESTS = float(os.getenv("DELAY_BETWEEN_REQUESTS", "0.3"))
 
+
 def login():
     """Logs into Timebutler."""
     response = session.get(
-        "https://app.timebutler.com/do",
+        f"{BASE_URL}/do",
         params={
             "ha": "login",
             "ac": 1,
@@ -52,13 +53,13 @@ def login():
 def clock_in():
     """Clocks-in."""
     response = session.get(
-        "https://app.timebutler.com/do",
+        f"{BASE_URL}/do",
         params={
             "ha": "zee",
             "ac": 101,
             "compid": "",
             "ajx": 1,
-            "_": int(time.time() * 1000)  # timestamp en ms
+            "_": int(time.time() * 1000)
         }
     )
     response.raise_for_status()
@@ -70,33 +71,34 @@ def clock_in():
 
 
 def main():
-    # ── 0. Validates .env values ─────────────────────────
-    if not USER_EMAIL:
-        raise ValueError("USER_EMAIL must be set.")
-    if not USER_PASSWORD:
-        raise ValueError("USER_PASSWORD must be set.")
-
     try:
+        # ── 0. Validates .env values ─────────────────────────
+        if not USER_EMAIL:
+            raise ValueError("USER_EMAIL must be set.")
+        if not USER_PASSWORD:
+            raise ValueError("USER_PASSWORD must be set.")
 
-        # ── 1. Checks if the script has run before today. ─────────────────────────
+        # ── 1. Checks if the script has run before today ─────────────────────────
         STAMP = Path(__file__).parent / ".last_run"
-
         today = str(date.today())
         if STAMP.exists() and STAMP.read_text().strip() == today:
             sys.exit(0)
 
-        # ── 1. Logs in ─────────────────────────
+        # ── 2. Logs in ─────────────────────────
         print("Logging into Timebutler...")
         login()
         print("Successfully logged in.")
         time.sleep(DELAY_BETWEEN_REQUESTS)
-        # ── 2. Clocks in ─────────────────────────
+
+        # ── 3. Clocks in ─────────────────────────
         clock_in()
         print("Successfully clocked in.")
 
-        # ── Creates a file with today's date to avoid re-clocking in. ─────────────────────────
+        # ── 4. Stamps today's date to avoid re-clocking in ─────────────────────────
         STAMP.write_text(today)
 
+    except ValueError as e:
+        print(f"Configuration error: {e}")
     except RuntimeError as e:
         print(f"Error: {e}")
     except requests.HTTPError as e:
