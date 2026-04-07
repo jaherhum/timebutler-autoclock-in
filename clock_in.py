@@ -4,6 +4,8 @@
 # dependencies = [
 #   "requests",
 #   "python-dotenv",
+#   "plyer",
+#   "pyobjus; sys_platform == 'darwin'",
 # ]
 # ///
 
@@ -13,6 +15,7 @@ Auto clock-in script for Timebutler.
 import sys
 import os
 from dotenv import load_dotenv
+from plyer import notification
 import requests
 import time
 from pathlib import Path
@@ -30,6 +33,20 @@ USER_EMAIL = os.getenv("USER_EMAIL", "")
 USER_PASSWORD = os.getenv("USER_PASSWORD", "")
 DELAY_BETWEEN_REQUESTS = float(os.getenv("DELAY_BETWEEN_REQUESTS", "0.3"))
 
+
+# ─────────────────────────────────────────────
+#  NOTIFICATIONS
+# ─────────────────────────────────────────────
+
+def notify(title: str, message: str):
+    try:
+        notification.notify(title=title, message=message, app_name="Timebutler", timeout=5)
+    except Exception:
+        pass
+
+# ─────────────────────────────────────────────
+#  FUNCTIONS
+# ─────────────────────────────────────────────
 
 def login():
     """Logs into Timebutler."""
@@ -82,6 +99,7 @@ def main():
         STAMP = Path(__file__).parent / ".last_run"
         today = str(date.today())
         if STAMP.exists() and STAMP.read_text().strip() == today:
+            notify("Clock-in", "Already clocked in today, skipping.")
             sys.exit(0)
 
         # ── 2. Logs in ─────────────────────────
@@ -93,16 +111,25 @@ def main():
         # ── 3. Clocks in ─────────────────────────
         clock_in()
         print("Successfully clocked in.")
+        notify("Clock-in", "Clock-in successful!")
 
         # ── 4. Stamps today's date to avoid re-clocking in ─────────────────────────
         STAMP.write_text(today)
 
     except ValueError as e:
-        print(f"Configuration error: {e}")
+        msg = f"Config Error: {e}"
+        print(msg)
+        notify("Clock-in Error", msg)
+
     except RuntimeError as e:
-        print(f"Error: {e}")
+        msg = f"Error: {e}"
+        print(msg)
+        notify("Clock-in Error", msg)
+
     except requests.HTTPError as e:
-        print(f"HTTP Error: {e}")
+        msg = f"HTTP Error: {e}"
+        print(msg)
+        notify("Clock-in Error", msg)
 
 
 if __name__ == "__main__":
